@@ -11,6 +11,21 @@ resource "aws_vpc" "main" {
 	tags = merge({Name = var.vpc_name}, var.tags)
 }
 
+resource "aws_internet_gateway" main {
+	count = var.internet ? 1 : 0
+	vpc_id = aws_vpc.id
+	tags = merge({Name = var.vpc_name}, var.tags)
+}
+
+resource "aws_route_table" main {
+	count = var.internet ? 1 : 0
+	vpc_id = aws_vpc.id
+	route {
+		cidr_block = "0.0.0.0/0"
+		gateway_id = aws_internet_gateway.id
+	}
+}
+
 resource "aws_subnet" "main" {
 	count = var.subnet_count
 	vpc_id = aws_vpc.main.id

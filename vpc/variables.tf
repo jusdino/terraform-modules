@@ -26,6 +26,12 @@ variable "tags" {
 	type = map
 }
 
+variable "internet" {
+	type = bool
+	default = false
+	description = "Allow internet access"
+}
+
 variable "ssh" {
 	type = bool
 	default = false

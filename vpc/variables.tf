@@ -13,3 +13,7 @@ variable "subnet_size" {
 	default = 8
 	description = "Number of bits to add to the vpc cidr block mask"
 }
+
+variable "tags" {
+	type = map
+}

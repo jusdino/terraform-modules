@@ -3,12 +3,7 @@ provider "aws" {
 }
 
 terraform {
-  backend "s3" {    
-    bucket         = "minecraft-terraform-state-dev"
-    region         = "us-west-1"
-    dynamodb_table = "terraform-locks"
-    encrypt        = true
-  }
+  backend "s3" {}
 }
 
 resource "aws_vpc" "main" {

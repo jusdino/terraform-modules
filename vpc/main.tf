@@ -13,16 +13,16 @@ resource "aws_vpc" "main" {
 
 resource "aws_internet_gateway" main {
 	count = var.internet ? 1 : 0
-	vpc_id = aws_vpc.id
+	vpc_id = aws_vpc.main.id
 	tags = merge({Name = var.vpc_name}, var.tags)
 }
 
 resource "aws_route_table" main {
 	count = var.internet ? 1 : 0
-	vpc_id = aws_vpc.id
+	vpc_id = aws_vpc.main.id
 	route {
 		cidr_block = "0.0.0.0/0"
-		gateway_id = aws_internet_gateway.id
+		gateway_id = aws_internet_gateway.main.id
 	}
 }
 

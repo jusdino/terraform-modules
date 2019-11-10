@@ -34,6 +34,7 @@ resource "aws_network_acl_rule" "ssh_in" {
 	rule_number = 229
 	egress = false
 	protocol = "tcp"
+	cidr_block = "0.0.0.0/0"
 	rule_action = "allow"
 	from_port = 22
 	to_port = 22
@@ -45,6 +46,7 @@ resource "aws_network_acl_rule" "ssh_out" {
 	rule_number = 228
 	egress = true
 	protocol = "tcp"
+	cidr_block = "0.0.0.0/0"
 	rule_action = "allow"
 	from_port = 22
 	to_port = 22
@@ -56,6 +58,7 @@ resource "aws_network_acl_rule" "http_in" {
 	rule_number = 809
 	egress = false
 	protocol = "tcp"
+	cidr_block = "0.0.0.0/0"
 	rule_action = "allow"
 	from_port = 80
 	to_port = 80
@@ -67,6 +70,7 @@ resource "aws_network_acl_rule" "http_out" {
 	rule_number = 808
 	egress = true
 	protocol = "tcp"
+	cidr_block = "0.0.0.0/0"
 	rule_action = "allow"
 	from_port = 80
 	to_port = 80
@@ -78,6 +82,7 @@ resource "aws_network_acl_rule" "https_in" {
 	rule_number = 4439
 	egress = false
 	protocol = "tcp"
+	cidr_block = "0.0.0.0/0"
 	rule_action = "allow"
 	from_port = 443
 	to_port = 443
@@ -89,6 +94,7 @@ resource "aws_network_acl_rule" "https_out" {
 	rule_number = 4438
 	egress = true
 	protocol = "tcp"
+	cidr_block = "0.0.0.0/0"
 	rule_action = "allow"
 	from_port = 443
 	to_port = 443
@@ -100,6 +106,7 @@ resource "aws_network_acl_rule" "minecraft_in" {
 	rule_number = 20000
 	egress = false
 	protocol = -1
+	cidr_block = "0.0.0.0/0"
 	rule_action = "allow"
 	from_port = 25565
 	to_port = 25565
@@ -111,6 +118,7 @@ resource "aws_network_acl_rule" "ephemeral_out" {
 	rule_number = 10258
 	egress = true
 	protocol = -1
+	cidr_block = "0.0.0.0/0"
 	rule_action = "allow"
 	from_port = 1025
 	to_port = 65535

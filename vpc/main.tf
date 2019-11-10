@@ -12,7 +12,7 @@ resource "aws_subnet" "main" {
 	vpc_id = aws_vpc.main.id
 	cidr_block = cidrsubnet(var.vpc_cidr_block, var.subnets_size, var.subnet_count)
 	availability_zone = element(data.aws_availability_zones.available.names, count.index % length(data.aws_availability_zones.available.names))
-	tags = merge({Name = "Subnet-${count.index}, var.tags)
+	tags = merge({Name = "Subnet-${count.index}", var.tags)
 }
 
 data "aws_availability_zones" "available" {

@@ -8,7 +8,7 @@ terraform {
 
 resource "aws_vpc" "main" {
 	cidr_block = var.vpc_cidr_block
-	tags = merge({Name = "main-vpc"}, var.tags)
+	tags = merge({Name = var.vpc_name}, var.tags)
 }
 
 resource "aws_subnet" "main" {

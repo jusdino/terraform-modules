@@ -24,13 +24,13 @@ data "aws_availability_zones" "available" {
 }
 
 resource "aws_network_acl" "main" {
-	vpc_id = aws_vpc.id
+	vpc_id = aws_vpc.main.id
 	tags = merge({Name = "main-vpc-nacl"}, var.tags)
 }
 
 resource "aws_network_acl_rule" "ssh_in" {
 	count = var.ssh ? 1 : 0
-	network_acl_id = aws_network_acl.id
+	network_acl_id = aws_network_acl.main.id
 	rule_number = 229
 	egress = false
 	protocol = "tcp"
@@ -41,7 +41,7 @@ resource "aws_network_acl_rule" "ssh_in" {
 
 resource "aws_network_acl_rule" "ssh_out" {
 	count = var.ssh ? 1 : 0
-	network_acl_id = aws_network_acl.id
+	network_acl_id = aws_network_acl.main.id
 	rule_number = 228
 	egress = true
 	protocol = "tcp"
@@ -52,7 +52,7 @@ resource "aws_network_acl_rule" "ssh_out" {
 
 resource "aws_network_acl_rule" "http_in" {
 	count = var.http ? 1 : 0
-	network_acl_id = aws_network_acl.id
+	network_acl_id = aws_network_acl.main.id
 	rule_number = 809
 	egress = false
 	protocol = "tcp"
@@ -63,7 +63,7 @@ resource "aws_network_acl_rule" "http_in" {
 
 resource "aws_network_acl_rule" "http_out" {
 	count = var.http ? 1 : 0
-	network_acl_id = aws_network_acl.id
+	network_acl_id = aws_network_acl.main.id
 	rule_number = 808
 	egress = true
 	protocol = "tcp"
@@ -74,7 +74,7 @@ resource "aws_network_acl_rule" "http_out" {
 
 resource "aws_network_acl_rule" "https_in" {
 	count = var.https ? 1 : 0
-	network_acl_id = aws_network_acl.id
+	network_acl_id = aws_network_acl.main.id
 	rule_number = 4439
 	egress = false
 	protocol = "tcp"
@@ -85,7 +85,7 @@ resource "aws_network_acl_rule" "https_in" {
 
 resource "aws_network_acl_rule" "https_out" {
 	count = var.https ? 1 : 0
-	network_acl_id = aws_network_acl.id
+	network_acl_id = aws_network_acl.main.id
 	rule_number = 4438
 	egress = true
 	protocol = "tcp"
@@ -96,7 +96,7 @@ resource "aws_network_acl_rule" "https_out" {
 
 resource "aws_network_acl_rule" "minecraft_in" {
 	count = var.minecraft ? 1 : 0
-	network_acl_id = aws_network_acl.id
+	network_acl_id = aws_network_acl.main.id
 	rule_number = 20000
 	egress = false
 	protocol = -1
@@ -107,7 +107,7 @@ resource "aws_network_acl_rule" "minecraft_in" {
 
 resource "aws_network_acl_rule" "ephemeral_out" {
 	count = var.https ? 1 : 0
-	network_acl_id = aws_network_acl.id
+	network_acl_id = aws_network_acl.main.id
 	rule_number = 10258
 	egress = true
 	protocol = -1

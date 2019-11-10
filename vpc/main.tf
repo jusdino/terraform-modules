@@ -22,13 +22,6 @@ resource "aws_subnet" "main" {
 data "aws_availability_zones" "available" {
 	state = "available"
 }
-provider "aws" {
-	region = var.aws_region
-}
-
-terraform {
-  backend "s3" {}
-}
 
 resource "aws_network_acl" "main" {
 	vpc_id = aws_vpc.id

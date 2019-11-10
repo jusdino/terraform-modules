@@ -36,7 +36,7 @@ resource "aws_subnet" "main" {
 
 resource "aws_route_table_association" "main" {
 	count = var.internet ? var.subnet_count : 0
-	subnet_id = element(aws_subnet.main, count.index)
+	subnet_id = aws_subnet.main[count.index].id
 	route_table_id = aws_route_table.main[0].id
 }
 

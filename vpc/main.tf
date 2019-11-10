@@ -3,7 +3,14 @@ provider "aws" {
 }
 
 terraform {
-  backend "s3" {}
+  backend "s3" {    
+    # Replace this with your bucket name!    
+    bucket         = "minecraft-terraform-state-dev"    
+    key            = "${path_relative_to_include()}/terraform.tfstate"    
+    region         = "us-west-1"    
+    dynamodb_table = "terraform-locks"    
+    encrypt        = true    
+  }
 }
 
 resource "aws_vpc" "main" {

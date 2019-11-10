@@ -16,7 +16,7 @@ resource "aws_subnet" "main" {
 	vpc_id = aws_vpc.main.id
 	cidr_block = cidrsubnet(var.vpc_cidr_block, var.subnet_size, count.index)
 	availability_zone = element(data.aws_availability_zones.available.names, count.index % length(data.aws_availability_zones.available.names))
-	tags = merge({Name = "Subnet-${count.index}"}, var.tags)
+	tags = merge({Name = "${var.vpc_name}-subnet-${count.index}"}, var.tags)
 }
 
 data "aws_availability_zones" "available" {
@@ -25,7 +25,7 @@ data "aws_availability_zones" "available" {
 
 resource "aws_network_acl" "main" {
 	vpc_id = aws_vpc.main.id
-	tags = merge({Name = "main-vpc-nacl"}, var.tags)
+	tags = merge({Name = "${var.vpc_name}-nacl"}, var.tags)
 }
 
 resource "aws_network_acl_rule" "ssh_in" {

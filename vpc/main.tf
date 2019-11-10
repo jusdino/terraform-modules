@@ -106,7 +106,7 @@ resource "aws_network_acl_rule" "minecraft_in" {
 }
 
 resource "aws_network_acl_rule" "ephemeral_out" {
-	count = var.https ? 1 : 0
+	count = var.ephemeral ? 1 : 0
 	network_acl_id = aws_network_acl.main.id
 	rule_number = 10258
 	egress = true

@@ -133,6 +133,18 @@ resource "aws_network_acl_rule" "minecraft_in" {
 	to_port = 25565
 }
 
+resource "aws_network_acl_rule" "ephemeral_in" {
+	count = var.ephemeral ? 1 : 0
+	network_acl_id = aws_network_acl.main.id
+	rule_number = 10259
+	egress = false
+	protocol = -1
+	cidr_block = "0.0.0.0/0"
+	rule_action = "allow"
+	from_port = 1025
+	to_port = 65535
+}
+
 resource "aws_network_acl_rule" "ephemeral_out" {
 	count = var.ephemeral ? 1 : 0
 	network_acl_id = aws_network_acl.main.id

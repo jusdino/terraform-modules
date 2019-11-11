@@ -127,7 +127,7 @@ resource "aws_network_acl_rule" "minecraft_in" {
 	network_acl_id = aws_network_acl.main.id
 	rule_number = 20000
 	egress = false
-	protocol = -1
+	protocol = "tcp"
 	cidr_block = "0.0.0.0/0"
 	rule_action = "allow"
 	from_port = 25565
@@ -139,7 +139,7 @@ resource "aws_network_acl_rule" "ephemeral_in" {
 	network_acl_id = aws_network_acl.main.id
 	rule_number = 10259
 	egress = false
-	protocol = -1
+	protocol = "tcp"
 	cidr_block = "0.0.0.0/0"
 	rule_action = "allow"
 	from_port = 1025
@@ -151,7 +151,7 @@ resource "aws_network_acl_rule" "ephemeral_out" {
 	network_acl_id = aws_network_acl.main.id
 	rule_number = 10258
 	egress = true
-	protocol = -1
+	protocol = "tcp"
 	cidr_block = "0.0.0.0/0"
 	rule_action = "allow"
 	from_port = 1025

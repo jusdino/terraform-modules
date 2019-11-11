@@ -46,6 +46,7 @@ data "aws_availability_zones" "available" {
 
 resource "aws_network_acl" "main" {
 	vpc_id = aws_vpc.main.id
+	subnet_ids = aws_subnet.main[*].id
 	tags = merge({Name = "${var.vpc_name}-nacl"}, var.tags)
 }
 

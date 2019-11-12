@@ -32,6 +32,7 @@ tar -xzvf "$${SERVER_NAME}.tar.gz"
 (
   cd "$${SERVER_NAME}"
   java -Xmx${var.memory} -Xms${var.memory} -jar server.jar
+	shutdown -h now
 )
 tar -czvf "$${SERVER_NAME}.tar.gz" "$${SERVER_NAME}"
 aws s3 cp "$${SERVER_NAME}.tar.gz" "s3://$${DATA_BUCKET}/$${SERVER_NAME}.tar.gz"

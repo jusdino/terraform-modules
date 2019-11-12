@@ -31,6 +31,13 @@ resource "aws_security_group" "minecraft" {
 		cidr_blocks = var.in_cidr_blocks
 	}
 
+	ingress {
+		from_port = 22
+		to_port = 22
+		protocol = "tcp"
+		cidr_blocks = var.in_cidr_blocks
+	}
+
 	egress {
 		from_port = 0
 		to_port = 0

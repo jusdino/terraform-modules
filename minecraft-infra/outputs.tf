@@ -3,7 +3,7 @@ output "security_group_id" {
 }
 
 output "public_key_name" {
-	value = aws_public_key.minecraft.key_name
+	value = aws_key_pair.minecraft.key_name
 }
 
 output "data_bucket_id" {

@@ -54,7 +54,7 @@ resource "aws_iam_policy" "server" {
       "Sid": "ListObjectsInBucket",
       "Effect": "Allow",
       "Action": "s3:ListBucket",
-      "Resource": ["${data.terraform_remote_state.minecraft_infra.outputs.data_bucket_arn}]
+      "Resource": ["${data.terraform_remote_state.minecraft_infra.outputs.data_bucket_arn}"]
     },
     {
       "Sid": "AllObjectActions",

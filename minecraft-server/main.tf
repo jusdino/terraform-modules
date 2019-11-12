@@ -28,7 +28,7 @@ cat >server.sh <<SCRIPT
 set -x
 cd /home/ec2-user
 aws s3 cp "s3://$${DATA_BUCKET}/$${SERVER_NAME}.tar.gz" "$${SERVER_NAME}.tar.gz"
-tar -xzvf "${SERVER_NAME}.tar.gz"
+tar -xzvf "$${SERVER_NAME}.tar.gz"
 (
   cd "$${SERVER_NAME}"
   java -Xmx${var.memory} -Xms${var.memory} -jar server.jar

@@ -7,7 +7,7 @@ terraform {
 }
 
 resource "aws_instance" "server" {
-  ami = data.aws_ami.id
+  ami = data.aws_ami.server.id
   instance_initiated_shutdown_behavior = "terminate"
   instance_type = var.instance_type
   key_name = data.terraform_remote_state.minecraft_infra.outputs.public_key_name
@@ -26,6 +26,7 @@ USER_DATA
 
 data "aws_ami" "server" {
  most_recent = true
+ owners = ["amazon"]
 
  filter {
    name   = "owner-alias"

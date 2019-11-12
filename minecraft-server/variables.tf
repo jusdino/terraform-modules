@@ -6,6 +6,10 @@ variable "tfstate_global_bucket_region" {
   type = string
 }
 
+variable "aws_region" {
+	type = string
+}
+
 variable "name" {
 	type = string
 	description = "Name of the minecraft server"

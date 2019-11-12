@@ -51,15 +51,16 @@ resource "aws_iam_policy" "server" {
   "Version": "2012-10-17",
   "Statement": [
     {
+      "Sid": "ListObjectsInBucket",
       "Effect": "Allow",
-      "Action": [
-        "s3:GetObject",
-        "s3:ListBucket",
-        "s3:PutObject"
-      ],
-      "Resource": [
-        "${data.terraform_remote_state.minecraft_infra.outputs.data_bucket_arn}"
-      ]
+      "Action": "s3:ListBucket",
+      "Resource": ["${data.terraform_remote_state.minecraft_infra.outputs.data_bucket_arn}]
+    },
+    {
+      "Sid": "AllObjectActions",
+      "Effect": "Allow",
+      "Action": "s3:*Object",
+      "Resource": ["${data.terraform_remote_state.minecraft_infra.outputs.data_bucket_arn}/*"]
     }
   ]
 }

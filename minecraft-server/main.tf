@@ -23,6 +23,21 @@ export DATA_BUCKET=${data.terraform_remote_state.minecraft_infra.outputs.data_bu
 export SERVER_NAME=${var.name}
 yum install -y java-11-amazon-corretto-headless
 env >/home/ec2-user/cloud-init.env
+cat >server.sh <<SCRIPT
+#!/bin/bash
+set -x
+cd /home/ec2-user
+aws s3 cp "s3://$${DATA_BUCKET}/$${SERVER_NAME}.tar.gz" "$${SERVER_NAME}.tar.gz"
+tar -xzvf "${SERVER_NAME}.tar.gz"
+(
+  cd "$${SERVER_NAME}"
+  java -Xmx800m -Xms800m -jar server.jar
+)
+tar -czvf "$${SERVER_NAME}.tar.gz" "$${SERVER_NAME}"
+aws s3 cp "$${SERVER_NAME}.tar.gz" "s3://$${DATA_BUCKET}/$${SERVER_NAME}.tar.gz"
+SCRIPT
+chmod +x server.sh
+screen -dm -S minecraft ./server.sh
 USER_DATA
 }
 

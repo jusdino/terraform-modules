@@ -15,7 +15,7 @@ resource "aws_s3_bucket" "minecraft_data" {
 
 resource "aws_security_group" "minecraft" {
 	name = "minecraft"
-	vpc_id = data.terraform_remote_state.vpc.vpc_id
+	vpc_id = data.terraform_remote_state.vpc.outputs.vpc_id
 
 	ingress {
 		from_port = 25565

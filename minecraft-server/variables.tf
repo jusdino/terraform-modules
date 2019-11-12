@@ -21,6 +21,12 @@ variable "instance_type" {
 	default = "t3.micro"
 }
 
+variable "memory" {
+	type = string
+	description = "Memory allocation to feed to java for server"
+	default = "1024m"
+}
+
 variable "tags" {
 	type = map
 }

@@ -23,3 +23,8 @@ variable "public_key" {
 	type = string
 	description = "Public key to use in minecraft server instances"
 }
+
+variable "data_bucket_name" {
+	type = string
+	description = "Name of s3 bucket used to house server data"
+}

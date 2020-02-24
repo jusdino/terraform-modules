@@ -11,7 +11,7 @@ data "terraform_remote_state" "vpc" {
   config = {
     bucket = var.tfstate_global_bucket
     region = var.tfstate_global_bucket_region
-    key = "dev/public/vpc/terraform.tfstate"
+    key = "us-west-1/dev/public/vpc/terraform.tfstate"
   }
 }
 
@@ -29,6 +29,6 @@ data "terraform_remote_state" "minecraft_infra" {
   config = {
     bucket = var.tfstate_global_bucket
     region = var.tfstate_global_bucket_region
-    key = "dev/public/apps/minecraft-infra/terraform.tfstate"
+    key = "us-west-1/dev/public/apps/minecraft-infra/terraform.tfstate"
   }
 }

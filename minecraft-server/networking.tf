@@ -6,7 +6,7 @@ resource "aws_eip" "server" {
 
 resource "aws_route53_record" "server" {
   zone_id = data.terraform_remote_state.dns.outputs.hosted_zone_id
-  name = "${var.name}"
+  name = var.name
   type = "A"
   ttl = 60
   records = [aws_eip.server.public_ip]

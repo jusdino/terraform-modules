@@ -13,11 +13,34 @@ resource "aws_instance" "server" {
 #!/bin/bash
 export DATA_BUCKET=${data.terraform_remote_state.minecraft_infra.outputs.data_bucket_id}
 export SERVER_NAME=${var.name}
+export HOSTED_ZONE_ID=${data.terraform_remote_state.dns.outputs.hosted_zone_id}
+export AWS_DEFAULT_REGION=${var.aws_region}
+
 yum install -y java-11-amazon-corretto-headless
 env >/home/ec2-user/cloud-init.env
+cat >change-set.json <<JSON
+{
+  "Comment": "Move domain to holding",
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "${var.name}.${data.terraform_remote_state.dns.outputs.hosted_zone_name}",
+        "Type": "A",
+        "TTL": 60,
+        "ResourceRecords": [
+          {
+            "Value": "$$(dig +short start.${data.terraform_remote_state.dns.outputs.hosted_zone_name} | head -1)"
+          }
+        ]
+      }
+    }
+  ]
+}
+JSON
 cat >server.sh <<SCRIPT
 #!/bin/bash
-set -x
+set -ex
 cd /home/ec2-user
 aws s3 cp "s3://$${DATA_BUCKET}/$${SERVER_NAME}.tar.gz" "$${SERVER_NAME}.tar.gz"
 tar -xzvf "$${SERVER_NAME}.tar.gz"
@@ -27,6 +50,12 @@ tar -xzvf "$${SERVER_NAME}.tar.gz"
 )
 tar -czvf "$${SERVER_NAME}.tar.gz" "$${SERVER_NAME}"
 aws s3 cp "$${SERVER_NAME}.tar.gz" "s3://$${DATA_BUCKET}/$${SERVER_NAME}.tar.gz"
+
+# Move route53 to holding, relinquish Elastic IP
+aws route53 change-resource-record-sets --hosted-zone-id "$HOSTED_ZONE_ID" --change-batch file:///change-set.json
+aws ec2 disassociate-address --association-id ${aws_eip.server.association_id}
+aws ec2 release-address --allocation-id ${aws_eip.server.allocation_id}
+
 shutdown -h now
 SCRIPT
 chmod +x server.sh

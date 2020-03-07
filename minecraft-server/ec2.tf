@@ -27,7 +27,7 @@ tar -xzvf "$${SERVER_NAME}.tar.gz"
 )
 tar -czvf "$${SERVER_NAME}.tar.gz" "$${SERVER_NAME}"
 aws s3 cp "$${SERVER_NAME}.tar.gz" "s3://$${DATA_BUCKET}/$${SERVER_NAME}.tar.gz"
-# shutdown -h now
+shutdown -h now
 SCRIPT
 chmod +x server.sh
 screen -dm -S minecraft ./server.sh
@@ -78,7 +78,7 @@ resource "aws_iam_policy" "server" {
         "route53:GetChange",
         "route53:ListResourceRecordsSets"
       ],
-      "Resource": "arn:aws:route53:::hostedzone/${data.terraform_remote_state.dns.hosted_zone_id}"
+      "Resource": "arn:aws:route53:::hostedzone/${data.terraform_remote_state.dns.outputs.hosted_zone_id}"
     },
     {
       "Sid": "AllowUpdateEIP",
@@ -88,7 +88,7 @@ resource "aws_iam_policy" "server" {
         "ec2:DisassociateAddress",
         "ec2:ReleaseAddress"
       ],
-      "Resource": "arn:aws:route53:::hostedzone/${data.terraform_remote_state.dns.hosted_zone_id}"
+      "Resource": "*"
     }
   ]
 }

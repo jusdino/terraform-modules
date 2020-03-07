@@ -11,14 +11,14 @@ resource "aws_instance" "server" {
   volume_tags = merge({Name = var.name }, var.tags)
   user_data = <<USER_DATA
 #!/bin/bash
-export DATA_BUCKET=${data.terraform_remote_state.minecraft_infra.outputs.data_bucket_id}
-export SERVER_NAME=${var.name}
-export HOSTED_ZONE_ID=${data.terraform_remote_state.dns.outputs.hosted_zone_id}
-export AWS_DEFAULT_REGION=${var.aws_region}
+set -ex
 
-yum install -y java-11-amazon-corretto-headless
+export SERVER_NAME=${var.name}
+export DATA_BUCKET=${data.terraform_remote_state.minecraft_infra.outputs.data_bucket_id}
+
+yum install -y java-11-amazon-corretto-headless jq
 env >/home/ec2-user/cloud-init.env
-cat >change-set.json <<JSON
+cat >/home/ec2-user/change-set.json <<JSON
 {
   "Comment": "Move domain to holding",
   "Changes": [
@@ -30,7 +30,7 @@ cat >change-set.json <<JSON
         "TTL": 60,
         "ResourceRecords": [
           {
-            "Value": "$$(dig +short start.${data.terraform_remote_state.dns.outputs.hosted_zone_name} | head -1)"
+            "Value": "$(dig +short start.${data.terraform_remote_state.dns.outputs.hosted_zone_name} | head -1)"
           }
         ]
       }
@@ -41,6 +41,10 @@ JSON
 cat >server.sh <<SCRIPT
 #!/bin/bash
 set -ex
+export AWS_DEFAULT_REGION=${var.aws_region}
+export HOSTED_ZONE_ID=${data.terraform_remote_state.dns.outputs.hosted_zone_id}
+export INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
+
 cd /home/ec2-user
 aws s3 cp "s3://$${DATA_BUCKET}/$${SERVER_NAME}.tar.gz" "$${SERVER_NAME}.tar.gz"
 tar -xzvf "$${SERVER_NAME}.tar.gz"
@@ -51,15 +55,19 @@ tar -xzvf "$${SERVER_NAME}.tar.gz"
 tar -czvf "$${SERVER_NAME}.tar.gz" "$${SERVER_NAME}"
 aws s3 cp "$${SERVER_NAME}.tar.gz" "s3://$${DATA_BUCKET}/$${SERVER_NAME}.tar.gz"
 
-# Move route53 to holding, relinquish Elastic IP
-aws route53 change-resource-record-sets --hosted-zone-id "$HOSTED_ZONE_ID" --change-batch file:///change-set.json
-aws ec2 disassociate-address --association-id ${aws_eip.server.association_id}
-aws ec2 release-address --allocation-id ${aws_eip.server.allocation_id}
+# Move route53 to holding, release Elastic IP
+ADDRESS_DATA=\$(aws ec2 describe-addresses --filter "Name=instance-id,Values=\$INSTANCE_ID")
+ASSOCIATION_ID=\$(echo "\$ADDRESS_DATA" | jq -r '.Addresses[].AssociationId')
+ALLOCATION_ID=\$(echo "\$ADDRESS_DATA" | jq -r '.Addresses[].AllocationId')
+
+aws route53 change-resource-record-sets --hosted-zone-id "\$HOSTED_ZONE_ID" --change-batch file:///home/ec2-user/change-set.json
+aws ec2 disassociate-address --association-id "\$ASSOCIATION_ID"
+aws ec2 release-address --allocation-id "\$ALLOCATION_ID"
 
 shutdown -h now
 SCRIPT
 chmod +x server.sh
-screen -dm -S minecraft ./server.sh
+screen -dm -L -S minecraft ./server.sh
 USER_DATA
 }
 

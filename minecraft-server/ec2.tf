@@ -11,7 +11,7 @@ resource "aws_instance" "server" {
   volume_tags = merge({Name = var.name }, var.tags)
   user_data = <<USER_DATA
 #!/bin/bash
-set -ex
+set -x
 
 export SERVER_NAME=${var.name}
 export DATA_BUCKET=${data.terraform_remote_state.minecraft_infra.outputs.data_bucket_id}

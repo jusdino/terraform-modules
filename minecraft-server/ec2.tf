@@ -138,7 +138,7 @@ resource "aws_iam_role_policy_attachment" "server" {
 }
 
 resource "aws_iam_instance_profile" "server" {
-  name = "minecraft-server"
+  name = "${var.name}-minecraft-server"
   role = aws_iam_role.server.name
 }
 

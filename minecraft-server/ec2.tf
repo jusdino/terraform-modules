@@ -40,7 +40,7 @@ cat >/home/ec2-user/change-set.json <<JSON
 JSON
 cat >server.sh <<SCRIPT
 #!/bin/bash
-set -ex
+set -x
 export AWS_DEFAULT_REGION=${var.aws_region}
 export HOSTED_ZONE_ID=${data.terraform_remote_state.dns.outputs.hosted_zone_id}
 export INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)

@@ -2,12 +2,13 @@ variable "tfstate_global_bucket" {
   type = string
 }
 
-variable "tfstate_global_bucket_region" {
-  type = string
-}
-
 variable "aws_region" {
 	type = string
+}
+
+variable "environment" {
+	type = string
+	description = "Environment we are deploying into"
 }
 
 variable "name" {
@@ -28,5 +29,5 @@ variable "memory" {
 }
 
 variable "tags" {
-	type = map
+	type = map(string)
 }

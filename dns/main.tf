@@ -1,11 +1,3 @@
-provider "aws" {
-  region = var.aws_region
-}
-
-terraform {
-  backend "s3" {}
-}
-
 resource "aws_route53_zone" "main" {
   name = var.dns_zone_name
   tags = merge({Name = var.dns_zone_name }, var.tags)

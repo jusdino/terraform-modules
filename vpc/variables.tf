@@ -23,7 +23,7 @@ variable "subnet_size" {
 }
 
 variable "tags" {
-	type = map
+	type = map(string)
 }
 
 variable "internet" {

@@ -1,9 +1,6 @@
-provider "aws" {
-  region = var.aws_region
-}
-
-terraform {
-  backend "s3" {}
+locals {
+	prod_non_prod = var.environment == "prod" ? "prod" : "non-prod"
+	name = "minecraft-infra"
 }
 
 resource "aws_s3_bucket" "minecraft_data" {
@@ -14,10 +11,11 @@ resource "aws_s3_bucket" "minecraft_data" {
 }
 
 resource "aws_security_group" "minecraft" {
-	name = "minecraft"
+	name = local.name
 	vpc_id = data.terraform_remote_state.vpc.outputs.vpc_id
 
 	ingress {
+		description = "minecraft tcp"
 		from_port = 25565
 		to_port = 25565
 		protocol = "tcp"
@@ -25,6 +23,7 @@ resource "aws_security_group" "minecraft" {
 	}
 
 	ingress {
+		description = "minecraft udp"
 		from_port = 25565
 		to_port = 25565
 		protocol = "udp"
@@ -32,6 +31,7 @@ resource "aws_security_group" "minecraft" {
 	}
 
 	ingress {
+		description = "minecraft dynamap"
 		from_port = 8123
 		to_port = 8123
 		protocol = "tcp"
@@ -39,6 +39,7 @@ resource "aws_security_group" "minecraft" {
 	}
 
 	ingress {
+		description = "ssh"
 		from_port = 22
 		to_port = 22
 		protocol = "tcp"
@@ -46,6 +47,7 @@ resource "aws_security_group" "minecraft" {
 	}
 
 	egress {
+		description = "all-out"
 		from_port = 0
 		to_port = 0
 		protocol = "-1"
@@ -56,15 +58,16 @@ resource "aws_security_group" "minecraft" {
 }
 
 resource "aws_key_pair" "minecraft" {
-	key_name = "minecraft"
+	key_name = "minecraft-${var.environment}"
 	public_key = var.public_key
+	tags = var.tags
 }
 
 data "terraform_remote_state" "vpc" {
   backend = "s3"
   config = {
     bucket = var.tfstate_global_bucket
-    region = var.tfstate_global_bucket_region
-    key = "us-west-1/dev/public/vpc/terraform.tfstate"
+    region = var.aws_region
+    key = "${local.prod_non_prod}/${var.aws_region}/_global/vpc/terraform.tfstate"
   }
 }

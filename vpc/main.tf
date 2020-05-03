@@ -1,11 +1,3 @@
-provider "aws" {
-	region = var.aws_region
-}
-
-terraform {
-  backend "s3" {}
-}
-
 resource "aws_vpc" "main" {
 	cidr_block = var.vpc_cidr_block
 	tags = merge({Name = var.vpc_name}, var.tags)
@@ -47,7 +39,7 @@ data "aws_availability_zones" "available" {
 resource "aws_network_acl" "main" {
 	vpc_id = aws_vpc.main.id
 	subnet_ids = aws_subnet.main[*].id
-	tags = merge({Name = "${var.vpc_name}-nacl"}, var.tags)
+	tags = merge({Name = "${var.vpc_name}"}, var.tags)
 }
 
 resource "aws_network_acl_rule" "ssh_in" {

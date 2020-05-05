@@ -2,6 +2,10 @@ resource "aws_instance" "server" {
   ami = data.aws_ami.server.id
   instance_initiated_shutdown_behavior = "terminate"
   instance_type = var.instance_type
+  root_block_device {
+    volume_size = var.volume_size
+    delete_on_termination = true
+  }
   key_name = data.terraform_remote_state.minecraft_infra.outputs.public_key_name
   iam_instance_profile = aws_iam_instance_profile.server.name
   vpc_security_group_ids = [data.terraform_remote_state.minecraft_infra.outputs.security_group_id]

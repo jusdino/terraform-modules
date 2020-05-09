@@ -3,7 +3,7 @@ output "server_ip" {
 }
 
 output "server_root_volume_size" {
-	value = aws_instance.server.root_block_device.volume_size
+	value = aws_instance.server.root_block_device[0].volume_size
 }
 
 output "server_fqdn" {

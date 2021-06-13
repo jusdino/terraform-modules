@@ -1,31 +1,31 @@
-variable "tfstate_global_bucket" {
+variable tfstate_global_bucket {
   type = string
 }
 
-variable "aws_region" {
+variable aws_region {
 	type = string
 }
 
-variable "environment" {
+variable environment {
 	type = string
 	description = "Environment we are deploying into"
 }
 
-variable "tags" {
+variable tags {
 	type = map(string)
 }
 
-variable "in_cidr_blocks" {
+variable in_cidr_blocks {
 	type = list(string)
 	description = "List of cidr blocks from which traffic is allowed in"
 }
 
-variable "public_key" {
+variable public_key {
 	type = string
 	description = "Public key to use in minecraft server instances"
 }
 
-variable "data_bucket_name" {
+variable data_bucket_name {
 	type = string
 	description = "Name of s3 bucket used to house server data"
 }

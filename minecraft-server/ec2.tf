@@ -1,4 +1,4 @@
-resource "aws_instance" "server" {
+resource aws_instance server {
   ami = data.aws_ami.server.id
   instance_initiated_shutdown_behavior = "terminate"
   instance_type = var.instance_type
@@ -20,7 +20,11 @@ set -x
 export SERVER_NAME=${var.name}
 export DATA_BUCKET=${data.terraform_remote_state.minecraft_infra.outputs.data_bucket_id}
 
-yum install -y java-11-amazon-corretto-headless jq
+# Install java 16, jq
+rpm --import https://yum.corretto.aws/corretto.key
+curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
+yum install -y java-16-amazon-corretto-devel jq
+
 env >/home/ec2-user/cloud-init.env
 cat >/home/ec2-user/change-set.json <<JSON
 {
@@ -76,7 +80,7 @@ screen -dm -L -S minecraft ./server.sh
 USER_DATA
 }
 
-resource "aws_iam_role" "server" {
+resource aws_iam_role server {
   name = "${var.name}-server"
   assume_role_policy = <<POLICY
 {
@@ -94,7 +98,7 @@ resource "aws_iam_role" "server" {
 POLICY
 }
 
-resource "aws_iam_policy" "server" {
+resource aws_iam_policy server {
   name = "${var.name}-server"
   policy = <<POLICY
 {
@@ -137,17 +141,17 @@ resource "aws_iam_policy" "server" {
 POLICY
 }
 
-resource "aws_iam_role_policy_attachment" "server" {
+resource aws_iam_role_policy_attachment server {
   role = aws_iam_role.server.name
   policy_arn = aws_iam_policy.server.arn
 }
 
-resource "aws_iam_instance_profile" "server" {
+resource aws_iam_instance_profile server {
   name = "${var.name}-minecraft-server"
   role = aws_iam_role.server.name
 }
 
-data "aws_ami" "server" {
+data aws_ami server {
   most_recent = true
   owners = ["amazon"]
 

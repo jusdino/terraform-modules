@@ -7,7 +7,6 @@ resource aws_s3_bucket minecraft_data {
 	bucket = var.data_bucket_name
 	acl = "private"
 	force_destroy = true
-	region = var.aws_region
 }
 
 resource aws_security_group minecraft {

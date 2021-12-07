@@ -23,7 +23,7 @@ export DATA_BUCKET=${data.terraform_remote_state.minecraft_infra.outputs.data_bu
 # Install java 16, jq
 rpm --import https://yum.corretto.aws/corretto.key
 curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
-yum install -y java-16-amazon-corretto-devel jq
+yum install -y java-17-amazon-corretto-headless jq
 
 env >/home/ec2-user/cloud-init.env
 cat >/home/ec2-user/change-set.json <<JSON

@@ -3,7 +3,7 @@ locals {
   name = "minecraft-infra"
 }
 
-data "terraform_remote_state" "vpc" {
+data terraform_remote_state vpc {
   backend = "s3"
   config = {
     bucket = var.tfstate_global_bucket
@@ -12,7 +12,7 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
-data "terraform_remote_state" "dns" {
+data terraform_remote_state dns {
   backend = "s3"
   config = {
     bucket = var.tfstate_global_bucket
@@ -21,7 +21,7 @@ data "terraform_remote_state" "dns" {
   }
 }
 
-data "terraform_remote_state" "minecraft_infra" {
+data terraform_remote_state minecraft_infra {
   backend = "s3"
   config = {
     bucket = var.tfstate_global_bucket

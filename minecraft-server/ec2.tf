@@ -73,9 +73,6 @@ aws route53 change-resource-record-sets --hosted-zone-id "\$HOSTED_ZONE_ID" --ch
 aws ec2 disassociate-address --association-id "\$ASSOCIATION_ID"
 aws ec2 release-address --allocation-id "\$ALLOCATION_ID"
 
-DATE=\$(date -u --iso-8601=seconds)
-journalctl -t cloud-init | aws s3 cp - "s3://$${DATA_BUCKET}/$${SERVER_NAME}/logs/$${DATE}.txt"
-
 shutdown -h now
 SCRIPT
 chmod +x server.sh

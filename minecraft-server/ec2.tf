@@ -20,11 +20,8 @@ set -x
 export SERVER_NAME=${var.name}
 export DATA_BUCKET=${data.terraform_remote_state.minecraft_infra.outputs.data_bucket_id}
 
-# Install java 16, jq
-rpm --import https://yum.corretto.aws/corretto.key
-curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
-yum update -y
-yum install -y java-17-amazon-corretto-headless jq
+# Install java 17, jq
+yum install -y java-17-amazon-corretto-devel jq
 
 env >/home/ec2-user/cloud-init.env
 cat >/home/ec2-user/change-set.json <<JSON
@@ -74,7 +71,7 @@ aws route53 change-resource-record-sets --hosted-zone-id "\$HOSTED_ZONE_ID" --ch
 aws ec2 disassociate-address --association-id "\$ASSOCIATION_ID"
 aws ec2 release-address --allocation-id "\$ALLOCATION_ID"
 
-DATE="\$(date -u --iso-8601=seconds)"
+DATE=\$(date -u --iso-8601=seconds)
 journalctl -t cloud-init | aws s3 cp - "s3://$${DATA_BUCKET}/$${SERVER_NAME}/logs/$${DATE}.txt"
 
 shutdown -h now
